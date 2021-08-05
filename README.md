@@ -62,7 +62,7 @@ Sample Unsuccessful response:
 }
 ```
 
-###POST /messages (Authorization header required)
+### POST /messages (Authorization header required)
 Sample request:
 ```
 {
@@ -85,7 +85,7 @@ Sample Unsuccessful response:
 }
 ```
 
-###GET /messages/all, /messages/unread (Authorization header required)
+### GET /messages/all, /messages/unread (Authorization header required)
 Sample response(200):
 ```
 [
@@ -108,7 +108,7 @@ Sample response(200):
 ]
 ```
 
-###GET /message (Authorization header required)
+### GET /message (Authorization header required)
 Sample response (200):
 ```
 {
@@ -127,7 +127,7 @@ Sample response (404):
 }
 ```
 
-###DELETE /message/:id (Authorization header required)
+### DELETE /message/:id (Authorization header required)
 Sample response (200):
 ```
 {
