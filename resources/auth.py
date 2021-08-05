@@ -1,20 +1,30 @@
 import json
+from json.decoder import JSONDecodeError
+
 from flask import request
 from flask_restful import Resource
-from models.user import User
+from sqlalchemy.exc import IntegrityError
 
-#
-# class LoginApi(Resource):
-#     def post(self):
-#         body = request.get_json()
-#         user = User(**body).save()
-#         id = movie.id
-#         return {'id': str(id)}, 200
+from models.user import User
 
 
 class RegisterApi(Resource):
-    def post(self):
-        body = json.loads(request.data, strict=False)
-        User(**body).save()
-        user = User.query.filter_by(username=body['username']).first()
-        return {'id': str(user.id)}, 200
+    @staticmethod
+    def post():
+        try:
+            body = json.loads(request.data, strict=False)
+            User(**body).save()
+            user = User.query.filter_by(username=body['username']).first()
+            return {"success": True, "id": user.id}, 200
+        except JSONDecodeError:
+            return {
+                       "success": False,
+                       "message": "Unable to parse request. Unexpected JSON format"
+                   }, 400
+        except AttributeError:
+            return {
+                       "success": False,
+                       "message": "Incorrect body, please provide [username, password, email] as a json body"
+                   }, 400
+        except IntegrityError:
+            return {"success": False, "message": "Username or Email already exist"}, 400

@@ -1,9 +1,10 @@
 import datetime
+
+import flask_jwt
 from flask_jwt import JWT
 from auth import authenticate, identity
 from flask_restful import Api
 from flask import Flask
-from db import init_db
 from resources.routes import initialize_routes
 
 # Configure Flask app
@@ -23,7 +24,8 @@ app.config['JWT_SECRET_KEY'] = key
 app.config['JWT_AUTH_HEADER_PREFIX'] = 'Bearer'
 app.config['JWT_EXPIRATION_DELTA'] = datetime.timedelta(days=10)
 jwt = JWT(app, authenticate, identity)
+app.config['PROPAGATE_EXCEPTIONS'] = True
+
 
 if __name__ == '__main__':
     app.run()
-    init_db()

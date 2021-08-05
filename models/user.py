@@ -1,6 +1,8 @@
+import base64
+
 from sqlalchemy import Column, Integer, String
 from db import Base, db_session
-from hash import hash_password
+from encryption import hash_password, encode_hash
 
 
 class User(Base):
@@ -12,8 +14,11 @@ class User(Base):
     email = Column(String(100), unique=True, nullable=False)
 
     def __init__(self, username=None, password=None, email=None):
+        if not username or not password or not email:
+            raise AttributeError
         self.username = username
-        self.password_hash = hash_password(password)
+        [salt_str, pass_hash_bytes] = hash_password(password)
+        self.password_hash = "%s:%s" % (salt_str, encode_hash(pass_hash_bytes))
         self.email = email
 
     def save(self):

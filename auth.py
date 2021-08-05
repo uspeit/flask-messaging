@@ -1,14 +1,17 @@
 from werkzeug.security import hmac
 
-from hash import hash_password
+from encryption import hash_password, encode_hash
 from models.user import User
 
 
 def authenticate(username, password):
     user = User.query.filter_by(username=username).first()
-    password_hash = hash_password(password)
-    if user and hmac.compare_digest(user.password_hash, password_hash):
-        return user
+    if user:
+        [user_salt, user_hash] = user.password_hash.split(":")
+        [_, pass_hash_bytes] = hash_password(password, user_salt)
+        pass_hash = encode_hash(pass_hash_bytes)
+        if hmac.compare_digest(user_hash, pass_hash):
+            return user
 
 
 def identity(payload):
