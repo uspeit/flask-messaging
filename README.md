@@ -4,7 +4,7 @@ REST messaging back-end written in Python with Flask
 
 Authorization with JWT signed using PBKDF2
 
-SQLite database using SQLAlchemy orm
+SQLite database using SQLAlchemy ORM
 
 ## Installation
 - Run ``scripts/generate-secret.py``
@@ -85,7 +85,10 @@ Sample unsuccessful response (400):
 }
 ```
 
-### GET /messages/all, /messages/unread (Authorization header required)
+### GET /messages/:all_or_unread/:sent_or_received (Authorization header required)
+- :all_or_unread - "all" will include read messages as well as unread, "unread" will return only unread
+- :sent_or_received - "sent" will return sent messages, "received" will return received messages, omitting this argument will return both
+
 Sample response (200):
 ```
 [
