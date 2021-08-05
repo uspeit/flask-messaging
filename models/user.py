@@ -1,5 +1,3 @@
-import base64
-
 from sqlalchemy import Column, Integer, String
 from db import Base, db_session
 from encryption import hash_password, encode_hash

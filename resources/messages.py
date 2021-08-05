@@ -1,7 +1,7 @@
-import json
 from flask import Response, request
 from flask_jwt import jwt_required, current_identity
 from flask_restful import Resource
+from auth import UnauthorizedError
 from models.message import Message
 
 
@@ -27,22 +27,20 @@ class MessageApi(Resource):
             return {"success": True}, 200
         except LookupError:
             return {"success": False, "error": "ID does not exist"}, 404
+        except UnauthorizedError:
+            return {"success": False, "error": "Unauthorized to alter this message"}, 401
 
 
 class MessagesApi(Resource):
     decorators = [jwt_required()]
 
-    # -- GET /messages/<type>
+    # -- GET /messages/<all_or_unread>/<sent_or_received>
     # Return all/unread messages
-    def get(self, message_type="all"):
-        if message_type == "all":
-            return self.get_messages(False)
-        if message_type == "unread":
-            return self.get_messages(True)
-        return {
-            "success": False,
-            "error": "Invalid endpoint, please use /messages/all or /messages/unread"
-        }, 400
+    def get(self, all_or_unread="all", sent_or_received=None):
+        include_read = all_or_unread == "all"
+        include_sent = sent_or_received is None or sent_or_received == "sent"
+        include_received = sent_or_received is None or sent_or_received == "received"
+        return self.get_messages(include_read, include_sent, include_received)
 
     # -- POST /messages
     # Add message to the collection
@@ -54,16 +52,16 @@ class MessagesApi(Resource):
             return {"success": True}, 200
         except AttributeError:
             return {
-                "success": False,
-                "error": "Invalid request body, please provide json with [sender_id, recipient_id, message, subject]"
-            }, 400
+                       "success": False,
+                       "error": "Invalid request body, Please provide a json with keys [recipient_id, message, subject]"
+                   }, 400
 
     # Helper methods
 
     @staticmethod
-    def get_messages(unread=False):
+    def get_messages(include_read=True, include_sent=True, include_received=True):
         # Get all messages sent/received by current user
-        messages = Message.get_all(current_identity.id, unread)
+        messages = Message.get_all(current_identity.id, include_read, include_sent, include_received)
         # Map Message list to json
         messages_json = list()
         for m in messages:

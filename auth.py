@@ -4,6 +4,10 @@ from encryption import hash_password, encode_hash
 from models.user import User
 
 
+class UnauthorizedError(BaseException):  # Exception for unauthorized actions
+    pass
+
+
 def authenticate(username, password):
     user = User.query.filter_by(username=username).first()
     if user:
