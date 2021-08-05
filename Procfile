@@ -1,1 +1,1 @@
-web: gunicorn app:app
+web: python scripts/generate_secret.py && python scripts/init_db.py && gunicorn app:app
