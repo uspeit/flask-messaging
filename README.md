@@ -1,12 +1,12 @@
-#Flask messaging back-end
-##About
+# Flask messaging back-end
+## About
 REST messaging back-end written in Python with Flask
 
 Authorization with JWT signed using PBKDF2
 
 SQLite database using SQLAlchemy orm
 
-##Installation
+## Installation
 - Run ``scripts/generate-secret.py``
 - Initialize database using Python commandline:
 ```
@@ -14,8 +14,8 @@ from db import init_db
 init_db()
 ```
 
-##Endpoints
-###POST /register
+## Endpoints
+### POST /register
 Sample request:
 ```
 {
@@ -39,7 +39,7 @@ Sample Unsuccessful response:
 }
 ```
 
-###POST /auth
+### POST /auth
 Sample request:
 ```
 {
