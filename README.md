@@ -2,16 +2,18 @@
 ## About
 REST messaging back-end written in Python with Flask
 
-Authorization with JWT signed using PBKDF2
+Authorization with JWT, PBKDF2 encrypted passwords
 
 SQLite database using SQLAlchemy ORM
 
-## Installation
-- Run ``scripts/generate-secret.py``
-- Initialize database using Python commandline:
+## Environment setup
 ```
-from db import init_db
-init_db()
+python scripts/generate_secret.py && PYTHONPATH='.' python scripts/init_db.py
+```
+
+## Start Server
+```
+gunicorn app:app
 ```
 
 ## Endpoints
