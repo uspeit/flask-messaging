@@ -24,14 +24,14 @@ Sample request:
     "email": "test@mail.com"
 }
 ```
-Sample Successful response:
+Sample successful response (200):
 ```
 {
     "success": true,
     "id": 3
 }
 ```
-Sample Unsuccessful response:
+Sample unsuccessful response (400):
 ```
 {
     "success": false,
@@ -47,13 +47,13 @@ Sample request:
     "password": "123"
 }
 ```
-Sample Successful response:
+Sample successful response (200):
 ```
 {
     "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MjkwMzc2MTQsImlhdCI6MTYyODE3MzYxNCwibmJmIjoxNjI4MTczNjE0LCJpZGVudGl0eSI6Mn0.FKsC7fKFXy7d7Xf9RvGpair_Alro8GwTF89HGWiv_vY"
 }
 ```
-Sample Unsuccessful response:
+Sample unsuccessful response (400):
 ```
 {
     "description": "Invalid credentials",
@@ -71,13 +71,13 @@ Sample request:
     "message": "some message"
 }
 ```
-Sample Successful response:
+Sample successful response (200):
 ```
 {
     "success": true
 }
 ```
-Sample Unsuccessful response:
+Sample unsuccessful response (400):
 ```
 {
     "success": false,
@@ -86,7 +86,7 @@ Sample Unsuccessful response:
 ```
 
 ### GET /messages/all, /messages/unread (Authorization header required)
-Sample response(200):
+Sample response (200):
 ```
 [
     {
