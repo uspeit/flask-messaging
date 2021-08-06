@@ -3,6 +3,7 @@ from json.decoder import JSONDecodeError
 from flask import request
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
+from dao.user import UserDao
 from entities.user import User
 
 
