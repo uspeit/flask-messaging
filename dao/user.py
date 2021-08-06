@@ -1,3 +1,5 @@
+from sqlalchemy.exc import IntegrityError
+
 from db import db_session
 from entities.user import User
 
@@ -5,8 +7,12 @@ from entities.user import User
 class UserDao:
     @staticmethod
     def add_user(username=None, password=None, email=None):
-        db_session.add(User(username, password, email))
-        db_session.commit()
+        try:
+            db_session.add(User(username, password, email))
+            db_session.commit()
+        except IntegrityError as err:
+            db_session.rollback()
+            raise err
 
     @staticmethod
     def get_by_username(username):
