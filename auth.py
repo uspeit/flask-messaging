@@ -1,7 +1,6 @@
 from werkzeug.security import hmac
-
+from dao.user import UserDao
 from encryption import hash_password, bytes_to_b64_str
-from entities.user import User
 
 
 class UnauthorizedError(BaseException):  # Exception for unauthorized actions
@@ -9,7 +8,7 @@ class UnauthorizedError(BaseException):  # Exception for unauthorized actions
 
 
 def authenticate(username, password):
-    user = User.query.filter_by(username=username).first()
+    user = UserDao.get_by_username(username)
     if user:
         # Obtain user hash and user salt
         [user_salt, user_hash] = user.password_hash.split(":")
@@ -22,5 +21,4 @@ def authenticate(username, password):
 
 
 def identity(payload):
-    user_id = payload['identity']
-    return User.query.filter_by(id=user_id).first()
+    return UserDao.get_by_id(payload['identity'])

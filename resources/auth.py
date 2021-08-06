@@ -12,7 +12,7 @@ class RegisterApi(Resource):
         try:
             body = json.loads(request.data, strict=False)
             User(**body).save()
-            user = User.query.filter_by(username=body['username']).first()
+            user = UserDao.get_by_username(username=body['username'])
             return {"success": True, "id": user.id}, 200
         except JSONDecodeError:
             return {
