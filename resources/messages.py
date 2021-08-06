@@ -36,11 +36,18 @@ class MessagesApi(Resource):
 
     # -- GET /messages/<all_or_unread>/<sent_or_received>
     # Return all/unread messages
-    def get(self, all_or_unread="all", sent_or_received=None):
+    @staticmethod
+    def get(all_or_unread="all", sent_or_received=None):
         include_read = all_or_unread == "all"
         include_sent = sent_or_received is None or sent_or_received == "sent"
         include_received = sent_or_received is None or sent_or_received == "received"
-        return self.get_messages(include_read, include_sent, include_received)
+        # Get all messages sent/received by current user
+        messages = Message.get_all(current_identity.id, include_read, include_sent, include_received)
+        # Map Message list to json
+        messages_json = list()
+        for m in messages:
+            messages_json.append(m.to_dto())
+        return messages_json, 200
 
     # -- POST /messages
     # Add message to the collection
@@ -55,15 +62,3 @@ class MessagesApi(Resource):
                        "success": False,
                        "error": "Invalid request body, Please provide a json with keys [recipient_id, message, subject]"
                    }, 400
-
-    # Helper methods
-
-    @staticmethod
-    def get_messages(include_read=True, include_sent=True, include_received=True):
-        # Get all messages sent/received by current user
-        messages = Message.get_all(current_identity.id, include_read, include_sent, include_received)
-        # Map Message list to json
-        messages_json = list()
-        for m in messages:
-            messages_json.append(m.to_dto())
-        return messages_json, 200
