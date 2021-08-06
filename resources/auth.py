@@ -4,7 +4,6 @@ from flask import request
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 from dao.user import UserDao
-from entities.user import User
 
 
 class RegisterApi(Resource):
@@ -12,7 +11,7 @@ class RegisterApi(Resource):
     def post():
         try:
             body = json.loads(request.data, strict=False)
-            User(**body).save()
+            UserDao.add_user(**body)
             user = UserDao.get_by_username(username=body['username'])
             return {"success": True, "id": user.id}, 200
         except JSONDecodeError:

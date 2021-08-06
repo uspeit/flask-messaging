@@ -1,8 +1,8 @@
-from flask import Response, request
+from flask import request
 from flask_jwt import jwt_required, current_identity
 from flask_restful import Resource
 from auth import UnauthorizedError
-from entities.message import Message
+from dao.message import MessageDao
 
 
 class MessageApi(Resource):
@@ -12,7 +12,7 @@ class MessageApi(Resource):
     # Return unread message
     @staticmethod
     def get():
-        message = Message.read_one(current_identity.id)
+        message = MessageDao.read_one(current_identity.id)
         if message:
             return message.to_dto(), 200
         else:
@@ -23,7 +23,7 @@ class MessageApi(Resource):
     @staticmethod
     def delete(message_id=None):
         try:
-            Message.remove(current_identity.id, message_id)
+            MessageDao.remove(current_identity.id, message_id)
             return {"success": True}, 200
         except LookupError:
             return {"success": False, "error": "ID does not exist"}, 404
@@ -42,7 +42,7 @@ class MessagesApi(Resource):
         include_sent = sent_or_received is None or sent_or_received == "sent"
         include_received = sent_or_received is None or sent_or_received == "received"
         # Get all messages sent/received by current user
-        messages = Message.get_all(current_identity.id, include_read, include_sent, include_received)
+        messages = MessageDao.get_all(current_identity.id, include_read, include_sent, include_received)
         # Map Message list to json
         messages_json = list()
         for m in messages:
@@ -55,7 +55,7 @@ class MessagesApi(Resource):
     def post():
         try:
             # Create message by current user with request body
-            Message(current_identity.id, **request.get_json()).save()
+            MessageDao.add_message(current_identity.id, **request.get_json())
             return {"success": True}, 200
         except AttributeError:
             return {

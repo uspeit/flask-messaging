@@ -28,10 +28,6 @@ class Message(Base):
         self.message = message
         self.subject = subject
 
-    def save(self):
-        db_session.add(self)
-        db_session.commit()
-
     def to_dto(self):
         return {
             "id": self.id,

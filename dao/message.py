@@ -1,10 +1,15 @@
 from sqlalchemy import or_, and_
 from auth import UnauthorizedError
-from db import Base, db_session
+from db import db_session
 from entities.message import Message
 
 
-class MessageDao(Base):
+class MessageDao:
+    @staticmethod
+    def add_message(sender_id=None, recipient_id=None, message=None, subject=None):
+        db_session.add(Message(sender_id, recipient_id, message, subject))
+        db_session.commit()
+
     @staticmethod
     def read_one(user_id=None):
         # Find oldest unread
@@ -14,7 +19,7 @@ class MessageDao(Base):
         # Mark as read
         if message:
             message.read = True
-            message.save()
+            db_session.commit()
         return message
 
     @staticmethod
@@ -57,6 +62,4 @@ class MessageDao(Base):
         if message.sender_deleted and message.recipient_deleted:
             # Both parties removed the message, remove from DB
             db_session.delete(message)
-            db_session.commit()
-        else:
-            message.save()
+        db_session.commit()
