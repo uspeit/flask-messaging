@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String
 from db import Base, db_session
-from encryption import hash_password, encode_hash
+from encryption import hash_password, bytes_to_b64_str
 
 
 class User(Base):
@@ -16,7 +16,7 @@ class User(Base):
             raise AttributeError
         self.username = username
         [salt_str, pass_hash_bytes] = hash_password(password)
-        self.password_hash = "%s:%s" % (salt_str, encode_hash(pass_hash_bytes))
+        self.password_hash = "%s:%s" % (salt_str, bytes_to_b64_str(pass_hash_bytes))
         self.email = email
 
     def save(self):

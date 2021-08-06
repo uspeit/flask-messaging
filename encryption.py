@@ -8,13 +8,17 @@ def hash_password(password, salt_str=None):
     if not salt_str:
         # Generate unique salt
         salt_bytes = token_bytes(64)
-        salt_str = base64.b64encode(salt_bytes).decode('unicode_escape')
+        salt_str = bytes_to_b64_str(salt_bytes)
     else:
         # Decode provided salt string
-        salt_bytes = base64.b64decode(salt_str.encode('unicode_escape'))
-    pass_hash_bytes = hashlib.pbkdf2_hmac('sha256', password.encode('unicode_escape'), salt_bytes, 100000)
+        salt_bytes = b64_str_to_bytes(salt_str)
+    pass_hash_bytes = hashlib.pbkdf2_hmac('sha256', password.encode(), salt_bytes, 100000)
     return salt_str, pass_hash_bytes
 
 
-def encode_hash(hash_bytes):
-    return base64.b64encode(hash_bytes).decode('unicode_escape')
+def bytes_to_b64_str(bytes_in):
+    return base64.b64encode(bytes_in).decode()
+
+
+def b64_str_to_bytes(str_in):
+    return base64.b64decode(str_in.encode())

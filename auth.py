@@ -1,6 +1,6 @@
 from werkzeug.security import hmac
 
-from encryption import hash_password, encode_hash
+from encryption import hash_password, bytes_to_b64_str
 from models.user import User
 
 
@@ -15,7 +15,7 @@ def authenticate(username, password):
         [user_salt, user_hash] = user.password_hash.split(":")
         # Hash password candidate with user salt
         [_, pass_hash_bytes] = hash_password(password, user_salt)
-        pass_hash = encode_hash(pass_hash_bytes)
+        pass_hash = bytes_to_b64_str(pass_hash_bytes)
         # Compare hash digests
         if hmac.compare_digest(user_hash, pass_hash):
             return user
