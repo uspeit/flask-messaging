@@ -3,7 +3,7 @@ from json.decoder import JSONDecodeError
 from flask import request
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
-from models.user import User
+from entities.user import User
 
 
 class RegisterApi(Resource):

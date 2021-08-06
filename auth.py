@@ -1,7 +1,7 @@
 from werkzeug.security import hmac
 
 from encryption import hash_password, bytes_to_b64_str
-from models.user import User
+from entities.user import User
 
 
 class UnauthorizedError(BaseException):  # Exception for unauthorized actions

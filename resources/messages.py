@@ -2,7 +2,7 @@ from flask import Response, request
 from flask_jwt import jwt_required, current_identity
 from flask_restful import Resource
 from auth import UnauthorizedError
-from models.message import Message
+from entities.message import Message
 
 
 class MessageApi(Resource):
